@@ -1,0 +1,80 @@
+classDiagram
+    direction TB
+
+    class EntidadJuego {
+        +number x
+        +number y
+        +boolean activa
+        +constructor(x, y)
+        +actualizar(dt)
+        +dibujar(ctx)
+    }
+
+    class Proyectil {
+        +number velocidad
+        +string color
+        +number ancho
+        +number alto
+        +constructor(x, y, velocidad, color, ancho, alto)
+        +actualizar(dt)
+        +dibujar(ctx)
+    }
+
+    class Personaje {
+        +string nombre
+        +Arma arma
+        +number tiempoAnimacion
+        +constructor(nombre, x, y, armaInicial)
+        +cambiarArma(nuevaArma)
+        +atacar() Proyectil
+        +actualizar(dt)
+        +dibujar(ctx)
+    }
+
+    class Arma {
+        +string nombre
+        +number danio
+        +string colorProyectil
+        +number velProyectil
+        +number escala
+        +constructor(nombre, danio, colorProyectil, velProyectil, escala)
+        +obtenerNombre() string
+        +obtenerColor() string
+        +crearProyectil(x, y) Proyectil
+    }
+
+    class MotorJuego {
+        +EntidadJuego[] entidades
+        +number ultimoTiempo
+        +HTMLCanvasElement canvas
+        +CanvasRenderingContext2D ctx
+        +HTMLButtonElement btnAtacar
+        +HTMLButtonElement btnCambiarArma
+        +HTMLDivElement hudTexto
+        +constructor(ancho, alto)
+        +construirDOM(ancho, alto)
+        +agregarEntidad(entidad)
+        +actualizarHUD(texto)
+        +iniciar()
+        +buclePrincipal(tiempoActual)
+    }
+
+    class ControladorJuego {
+        +MotorJuego motor
+        +Arma[] inventario
+        +number indiceArma
+        +Personaje jugador
+        +constructor()
+        +vincularEventos()
+        +actualizarUI()
+    }
+
+    EntidadJuego <|-- Proyectil : hereda
+    EntidadJuego <|-- Personaje : hereda
+    Personaje o-- Arma : equipa
+    Arma ..> Proyectil : crea
+    Personaje ..> Proyectil : usa / retorna
+    MotorJuego o-- "0..*" EntidadJuego : gestiona
+    ControladorJuego *-- MotorJuego : posee
+    ControladorJuego *-- Personaje : posee
+    ControladorJuego o-- "1..*" Arma : inventario
